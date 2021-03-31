@@ -5,4 +5,7 @@
 - uuid ^8.3.2
 - logger middleware
 
+# Full CRUD
+- Create, Read, Update, Delete Members
+ 
 ![Express.JS Tuts](assets/express.gif)
