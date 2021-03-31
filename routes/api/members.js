@@ -23,21 +23,63 @@ router.get('/:id', (req, res) => {
 // Create Member
 router.post('/', (req, res) => {
     const newMember = {
-      ...req.body,
-      id: uuid.v4(),
-      status: 'active'
+        ...req.body,
+        id: uuid.v4(),
+        status: 'active'
     };
-  
+
     if (!newMember.name || !newMember.email) {
-      return res.status(400).json({ msg: 'Please include a name and email' });
+        return res.status(400).json({
+            msg: 'Please include a name and email'
+        });
     }
-  
+
     members.push(newMember);
-    res.json(members);
-    // res.redirect('/');
-  });
-  
+    // res.json(members);
+    res.redirect('/');
+});
 
 
+
+// Update member
+router.put('/:id', (req, res) => {
+    const found = members.some(member => member.id === parseInt(req.params.id))
+
+    if (found) {
+        const updateMember = req.body;
+        members.forEach(member => {
+            if (member.id === parseInt(req.params.id)) {
+                member.name = updateMember.name ? updateMember.name : member.name;
+                member.email = updateMember.email ? updateMember.email : member.email;
+
+                res.json({
+                    msg: 'Member was updated',
+                    member
+                });
+            }
+        })
+    } else {
+        res.status(400).json({
+            msg: `No Member with the id of ${req.params.id}`
+        })
+    }
+})
+
+
+// DELETE single member
+router.delete('/:id', (req, res) => {
+    const found = members.some(member => member.id === parseInt(req.params.id))
+
+    if (found) {
+        res.json({
+            msg: 'Member Deleted',
+            members: members.filter(member => member.id !== parseInt(req.params.id))
+        })
+    } else {
+        res.status(400).json({
+            msg: `No Member with the id of ${req.params.id}`
+        })
+    }
+})
 
 module.exports = router
